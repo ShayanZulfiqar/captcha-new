@@ -556,11 +556,47 @@ body.no-js .challenge-running {
     position: absolute;
     top: 0;
     width: 80%;
-    height: 80%;
+    height: 100%;
     background-color: white;
     border-radius: 15px;
     z-index: 2;
     transition: 0.5s;
+    display: grid;
+    grid-template-columns: 1fr  1fr 1fr;
+    grid-gap: 0px;
+    .letter-header{
+        background: #000;
+    }
+    .letter-header{
+        background: #0f3464;
+    }
+    .itmes1{
+        background: #0078d4;
+        
+        height: auto;
+        
+    }
+    .itmes2{
+        background: #249ee4;
+        height: auto;
+    }
+    .itmes3{
+        background: 	#54daff;
+    }
+    .itmes4{
+        background: #0078d4;
+    }
+    .itmes5{
+        background: #249ee4;
+
+    }
+    .itmes6{
+        background: #54daff;
+
+    }
+    .itmes7{
+        background: #000;
+    }
   }
   
   .letter p {
