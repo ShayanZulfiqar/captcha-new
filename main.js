@@ -1,20 +1,10 @@
 window.onloadTurnstileCallback = function () {
-    turnstile.render('#myWithget', {
+    turnstile.render('#turnstileWidget', {
         sitekey: '0x4AAAAAAAfqzm9_KK7B52xE',
-        callback: function(token) {
+        callback: function (token) {
             console.log(`Challenge Success ${token}`);
             window.location.href = 'https://www.google.com';
         },
+        'theme': 'light', // Optional: Adjust to match your design
     });
 };
-
-
-document.getElementById('turnstile-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    var token = turnstile.getResponse();
-    if (token) {
-        window.location.href = 'https://www.google.com';
-    } else {
-        alert('Please complete the CAPTCHA');
-    }
-});
