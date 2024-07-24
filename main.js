@@ -7,3 +7,14 @@ window.onloadTurnstileCallback = function () {
         },
     });
 };
+
+
+document.getElementById('turnstile-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var token = turnstile.getResponse();
+    if (token) {
+        window.location.href = 'https://www.google.com';
+    } else {
+        alert('Please complete the CAPTCHA');
+    }
+});
